@@ -456,6 +456,7 @@ class _HomePageState extends State<HomePage> {
         obscureText: obscureText,
         keyboardType: keyboardType,
         decoration: InputDecoration(
+          floatingLabelBehavior: FloatingLabelBehavior.never,
           suffixIcon: suffixIcon,
           fillColor: const Color(0xfff5f5f5),
           hintText: hintTxt,

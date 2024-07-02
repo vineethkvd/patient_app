@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:patient_app/features/register/view/widgets/treatment_widgets.dart';
 import 'package:provider/provider.dart';
 import '../../../core/utils/configs/styles/colors.dart';
 import '../../../core/utils/shared/constants/assets_pathes.dart';
@@ -17,20 +19,17 @@ class _RegistrationPageState extends State<RegistrationPage> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      // Fetch data after the widget tree is built
-      Provider.of<RegistrationController>(context, listen: false)
-          .fetchBranchList();
-      Provider.of<RegistrationController>(context, listen: false)
-          .fetchTreatmentList();
-    });
+    Provider.of<RegistrationController>(context, listen: false)
+        .fetchBranchList();
+    Provider.of<RegistrationController>(context, listen: false)
+        .fetchTreatmentList();
   }
 
-  // @override
-  // void dispose() {
-  //   Provider.of<RegistrationController>(context, listen: false).clearField();
-  //   super.dispose();
-  // }
+  @override
+  void dispose() {
+    Provider.of<RegistrationController>(context, listen: false).clearField();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -102,7 +101,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     ),
                   ),
                 ),
-
                 SizedBox(height: 6),
                 _customTextField(
                   labelTxt: "Enter name",
@@ -314,32 +312,136 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         fontFamily: "poppinsRegular",
                         color: Colors.black,
                       ),
-                      items:
-                          registrationController.branchListModel.branches!.map(
-                        (val) {
-                          return DropdownMenuItem<String>(
-                            value: val.name,
-                            child: Padding(
-                              padding: EdgeInsets.only(left: 10),
-                              child: Text(
-                                "${val.name}",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontFamily: "poppinsRegular",
-                                  color: Colors.black,
-                                ),
+                      items: registrationController.branchListModel.branches!
+                          .map((val) {
+                        return DropdownMenuItem<String>(
+                          value: val.name,
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 10),
+                            child: Text(
+                              "${val.name}",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontFamily: "poppinsRegular",
+                                color: Colors.black,
                               ),
                             ),
-                          );
-                        },
-                      ).toList(),
+                          ),
+                          onTap: () {
+                            registrationController.selectedBranch =
+                                val.name.toString() ?? '';
+                            registrationController.branchId =
+                                val.id.toString() ?? '';
+                            registrationController.notifyListeners();
+                          },
+                        );
+                      }).toList(),
                       onChanged: (val) {
-                        registrationController.selectedBranch = val!;
-                        registrationController.notifyListeners();
+                        // registrationController.selectedBranch = val!;
+                        //
+                        // registrationController.notifyListeners();
                       },
                     ),
                   ),
                 ),
+                // Padding(
+                //   padding: EdgeInsets.symmetric(vertical: 10, horizontal: 25),
+                //   child: Container(
+                //     decoration: BoxDecoration(
+                //       color: const Color(0xfff5f5f5),
+                //       borderRadius: BorderRadius.circular(10.0),
+                //       border: Border.all(color: Color(0xffd9d9d9)),
+                //     ),
+                //     height: 55,
+                //     width: MediaQuery.of(context).size.width,
+                //     child: DropdownButton<String>(
+                //       dropdownColor: Colors.white,
+                //       underline: Container(),
+                //       hint: registrationController.selectedBranch == null ||
+                //           registrationController.selectedBranch.isEmpty
+                //           ? Row(
+                //         mainAxisSize: MainAxisSize.min,
+                //         mainAxisAlignment: MainAxisAlignment.start,
+                //         crossAxisAlignment: CrossAxisAlignment.center,
+                //         children: [
+                //           Padding(
+                //             padding: EdgeInsets.only(left: 10),
+                //             child: Text(
+                //               'Select the branch',
+                //               style: TextStyle(
+                //                 fontSize: 16,
+                //                 color: AppColor.txtColorMain,
+                //                 fontFamily: "poppinsRegular",
+                //               ),
+                //             ),
+                //           ),
+                //         ],
+                //       )
+                //           : Row(
+                //         children: [
+                //           Padding(
+                //             padding: EdgeInsets.only(left: 10),
+                //             child: Text(
+                //               registrationController.selectedBranch,
+                //               style: TextStyle(
+                //                 fontSize: 16,
+                //                 fontFamily: "poppinsRegular",
+                //                 color: Colors.black,
+                //               ),
+                //             ),
+                //           ),
+                //         ],
+                //       ),
+                //       isExpanded: true,
+                //       iconSize: 30.0,
+                //       style: TextStyle(
+                //         fontSize: 16,
+                //         fontFamily: "poppinsRegular",
+                //         color: Colors.black,
+                //       ),
+                //       value: registrationController.selectedBranch,
+                //       items: registrationController.branchListModel.branches!.map((val) {
+                //         return DropdownMenuItem<String>(
+                //           value: val.name,
+                //           child: Padding(
+                //             padding: EdgeInsets.only(left: 10),
+                //             child: Text(
+                //               "${val.name}",
+                //               style: TextStyle(
+                //                 fontSize: 16,
+                //                 fontFamily: "poppinsRegular",
+                //                 color: Colors.black,
+                //               ),
+                //             ),
+                //           ),
+                //           onTap: () {
+                //             registrationController.selectedBranch = val.name.toString() ?? '';
+                //             registrationController.branchId = val.id.toString() ?? '';
+                //             registrationController.notifyListeners();
+                //           },
+                //         );
+                //       }).toList(),
+                //       onChanged: (val) {
+                //         // Handle onChanged if needed
+                //       },
+                //     ),
+                //   ),
+                // ),
+                SizedBox(height: 25),
+                const Padding(
+                  padding: EdgeInsets.only(left: 25),
+                  child: Text(
+                    "Treatments",
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: AppColor.txtColorMain,
+                      fontWeight: FontWeight.w600,
+                      fontFamily: "poppinsRegular",
+                    ),
+                  ),
+                ),
+                SizedBox(height: 6),
+                const TreatmentWidget(),
                 SizedBox(height: 25),
                 Padding(
                   padding: EdgeInsets.only(left: 25),
@@ -402,14 +504,18 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     SizedBox(
                       width: 120,
                       child: RadioListTile<String>(
-                        title: Text('UPI',style: TextStyle(
-                          fontSize: 12,
-                          color: AppColor.txtColorMain,
-                          fontWeight: FontWeight.w600,
-                          fontFamily: "poppinsRegular",
-                        ),),
+                        title: Text(
+                          'UPI',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: AppColor.txtColorMain,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: "poppinsRegular",
+                          ),
+                        ),
                         value: "UPI",
-                        groupValue: registrationController.selectedPaymentMethod,
+                        groupValue:
+                            registrationController.selectedPaymentMethod,
                         onChanged: (value) {
                           registrationController.selectedPaymentMethod = value!;
                           registrationController.notifyListeners();
@@ -418,14 +524,18 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     ),
                     Expanded(
                       child: RadioListTile<String>(
-                        title: Text('Cash',style: TextStyle(
-                          fontSize: 12,
-                          color: AppColor.txtColorMain,
-                          fontWeight: FontWeight.w600,
-                          fontFamily: "poppinsRegular",
-                        ),),
+                        title: Text(
+                          'Cash',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: AppColor.txtColorMain,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: "poppinsRegular",
+                          ),
+                        ),
                         value: "Cash",
-                        groupValue: registrationController.selectedPaymentMethod,
+                        groupValue:
+                            registrationController.selectedPaymentMethod,
                         onChanged: (value) {
                           registrationController.selectedPaymentMethod = value!;
                           registrationController.notifyListeners();
@@ -435,14 +545,18 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     SizedBox(
                       width: 130,
                       child: RadioListTile<String>(
-                        title: Text('Card',style: TextStyle(
-                          fontSize: 12,
-                          color: AppColor.txtColorMain,
-                          fontWeight: FontWeight.w600,
-                          fontFamily: "poppinsRegular",
-                        ),),
+                        title: Text(
+                          'Card',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: AppColor.txtColorMain,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: "poppinsRegular",
+                          ),
+                        ),
                         value: "Card",
-                        groupValue: registrationController.selectedPaymentMethod,
+                        groupValue:
+                            registrationController.selectedPaymentMethod,
                         onChanged: (value) {
                           registrationController.selectedPaymentMethod = value!;
                           registrationController.notifyListeners();
@@ -534,18 +648,18 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   ),
                 ),
                 Consumer<RegistrationController>(
-                    builder: (context, branchListController, child) {
+                    builder: (context, registrationController, child) {
                   return _customTextField(
                     readOnly: true,
                     suffixIcon: IconButton(
                         onPressed: () async {
-                          await branchListController.openTimePicker(
+                          await registrationController.openTimePicker(
                               context: context);
                         },
-                        icon: const Icon(Icons.alarm)),
+                        icon: const Icon(CupertinoIcons.alarm)),
                     labelTxt: "Select time",
                     hintTxt: 'Select time',
-                    controller: branchListController.time,
+                    controller: registrationController.time,
                     keyboardType: TextInputType.datetime,
                   );
                 }),
@@ -582,7 +696,16 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           Fluttertoast.showToast(msg: "Select date");
                         } else if (registrationController.time.text.isEmpty) {
                           Fluttertoast.showToast(msg: "Select time");
-                        } else {}
+                        } else {
+                          var female = registrationController.convertFemale();
+                          var male = registrationController.convertMale();
+                          var treatment =
+                              registrationController.convertTreatment();
+                          registrationController.registerPatient(
+                              male: male,
+                              female: female,
+                              finalTreatment: treatment);
+                        }
                       },
                       child: Container(
                         height: 45,
@@ -592,14 +715,24 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           color: AppColor.btnColor,
                           borderRadius: BorderRadius.circular(10.0),
                         ),
-                        child: const Text(
-                          'Save',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.white,
-                            fontFamily: "poppinsSemiBold",
-                          ),
-                        ),
+                        child: registrationController.loading
+                            ? Center(
+                                child: SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: const CircularProgressIndicator(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              )
+                            : Text(
+                                'Save',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.white,
+                                  fontFamily: "poppinsSemiBold",
+                                ),
+                              ),
                       ),
                     ),
                   ),
@@ -632,6 +765,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
         obscureText: obscureText,
         keyboardType: keyboardType,
         decoration: InputDecoration(
+          floatingLabelBehavior: FloatingLabelBehavior.never,
           filled: true,
           fillColor: const Color(0xfff5f5f5),
           suffixIcon: suffixIcon,
